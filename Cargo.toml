@@ -1,0 +1,4 @@
+[package]
+name = "linear_rust"
+version = "0.1.0"
+authors = ["Britt Cagnina <brittcagnina@gmail.com>"]
