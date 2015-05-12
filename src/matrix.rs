@@ -1,5 +1,6 @@
 use vector::Vector;
 use std::ops::Add;
+use std::ops::Mul;
 
 pub struct RowMatrix {
     numRows: usize,
@@ -46,8 +47,10 @@ impl Matrix for ColumnMatrix {
     }
 }
 
-// RowMatrix + RowMatrix -> i64
-add_overload!(RowMatrix, RowMatrix, i64);
+// Addition Operator Overloads 
+add_overload!(RowMatrix, RowMatrix, i64, self, object, { 0 });
+add_overload!(RowMatrix, ColumnMatrix, i64, self, object, { 0 });
 
-// RowMatrix + ColumnMatrix -> i64
-add_overload!(RowMatrix, ColumnMatrix, i64);
+// Multiplication Operator Overloads 
+mul_overload!(RowMatrix, ColumnMatrix, i64, self, object, { 0 });
+mul_overload!(RowMatrix, RowMatrix, i64, self, object, { 0 });

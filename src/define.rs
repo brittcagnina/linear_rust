@@ -37,12 +37,19 @@ macro_rules! column_matrix {
 }
 
 macro_rules! add_overload {
-    ($obj1: ident, $obj2: ident, $out: ident) => { 
+    ($obj1: ident, $obj2: ident, $retType: ident, $s: ident, $o: ident, $logic: block) => { 
         impl Add<$obj1> for $obj2 { 
-           type Output = $out;
-           fn add(self, other: $obj1) -> $out {
-               42
-           }
+           type Output = $retType;
+           fn add($s, $o: $obj1) -> $retType $logic
+        }
+    }; 
+}
+
+macro_rules! mul_overload {
+    ($obj1: ident, $obj2: ident, $retType: ident, $s: ident, $o: ident, $logic: block) => { 
+        impl Mul<$obj1> for $obj2 { 
+           type Output = $retType;
+           fn mul($s, $o: $obj1) -> $retType $logic
         }
     }; 
 }
