@@ -1,24 +1,19 @@
-use std::ops::Add;
-use std::ops::Mul;
+use std::ops::{Add, Mul};
 
-pub struct Vector {
-    component: Vec<f64>,
+pub struct Vector<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> {
+    component: Vec<T>,
 }
 
-impl Vector {
-    pub fn new(v: Vec<f64>) -> Vector { Vector { component: v, } }
+impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Vector<T> {
+    pub fn new(v: Vec<T>) -> Vector<T> { Vector { component: v, } }
     pub fn clone(&self) -> Self {
 	Vector::new(self.component.clone()) 
     }
-    pub fn get(&self, n: usize)  -> f64 { self.component[n] }
-    pub fn append(&mut self, x: f64) { self.component.push(x); }
-    pub fn remove(&self, n: i64) -> Vector { Vector{ component: vec![0f64] } }
-    pub fn dot(self, v: Vector) -> f64 { 
-        self * v 
-    }
-    pub fn add(&self, v: Vector) -> Vector { 
-        Vector{ component: vec![0f64] } 
-    }
+    pub fn get(&self, n: usize) -> T { self.component[n].clone() }
+    pub fn append(&mut self, x: T) { self.component.push(x); }
+    //pub fn remove(&self, n: i64) -> Vector<i64> { Vector{ component: vec![0] } }
+    pub fn dot(self, v: Vector<T>) -> T { self * v }
+    pub fn add(self, v: Vector<T>) -> Vector<T> { self + v }
     pub fn view(&self) {
         print!["<"];
         for x in 0..self.len() {
@@ -32,28 +27,28 @@ impl Vector {
     } 
 }
 
+
 // Addition Operator Overloads
-add_overload!(Vector, Vector, Vector, self, object, { 
-    if self.len() != object.len() {
-        Vector::new(vec![0.0]) //TODO fix ret value
-    } else {
-        let mut vec: Vec<f64> = Vec::new();
+impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Add<Vector<T>> for Vector<T> {
+    type Output = Vector<T>;
+    fn add(self, other: Vector<T>) -> Vector<T> {
+        let mut vec: Vec<T> = Vec::new();
         for x in 0..self.len() {
-            vec.push(self.get(x) + object.get(x));
+            vec.push(self.get(x) + other.get(x));
         }
-        Vector::new(vec) 
+        Vector::new(vec)
     }
-});
+}
 
 // Multiplication Operator Overloads
-mul_overload!(Vector, Vector, f64, self, object, {
-    if self.len() != object.len() {
-        0.0 //TODO fix ret value
-    } else {
-        let mut ret: f64 = 0.0;
-        for x in 0..self.len() {
-            ret += self.get(x) * object.get(x)
+impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Mul<Vector<T>> for Vector<T> {
+    type Output = T;
+    fn mul(self, other: Vector<T>) -> T {
+        //TODO: Fix this init logic
+        let mut ret: T = self.get(0) * other.get(0);
+        for x in 1..self.len() {
+            ret = ret + self.get(x) * other.get(x)
         }
         ret
     }
-});
+}
