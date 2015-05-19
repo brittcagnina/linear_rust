@@ -11,15 +11,18 @@ impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Vector<T> {
     }
     pub fn get(&self, n: usize) -> T { self.component[n].clone() }
     pub fn append(&mut self, x: T) { self.component.push(x); }
-    //pub fn remove(&self, n: i64) -> Vector<i64> { Vector{ component: vec![0] } }
     pub fn dot(self, v: Vector<T>) -> T { self * v }
     pub fn add(self, v: Vector<T>) -> Vector<T> { self + v }
     pub fn view(&self) {
-        print!["<"];
+        print!["< "];
         for x in 0..self.len() {
-            print!["{},", x];
+            if x == self.len() - 1 {
+                print!{ "{}", x };
+            } else {
+                print!{ "{}, ", x };
+            }
         }
-        print![">\n"];
+        print![" >\n"];
     }
     pub fn dim(&self) -> usize { self.component.len() } 
     pub fn len(&self) -> usize { 
