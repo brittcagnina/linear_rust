@@ -1,10 +1,11 @@
 use std::ops::{Add, Mul};
+use traits;
 
-pub struct Vector<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> {
+pub struct Vector<T: traits::LinrustTrait<T>> {
     component: Vec<T>,
 }
 
-impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Vector<T> {
+impl<T: traits::LinrustTrait<T>> Vector<T> {
     pub fn new(v: Vec<T>) -> Vector<T> { Vector { component: v, } }
     pub fn clone(&self) -> Self {
 	Vector::new(self.component.clone()) 
@@ -17,9 +18,9 @@ impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Vector<T> {
         print!["< "];
         for x in 0..self.len() {
             if x == self.len() - 1 {
-                print!{ "{}", x };
+                print!{ "{}", self.get(x) };
             } else {
-                print!{ "{}, ", x };
+                print!{ "{}, ", self.get(x) };
             }
         }
         print![" >\n"];
@@ -32,7 +33,7 @@ impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Vector<T> {
 
 
 // Addition Operator Overloads
-impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Add<Vector<T>> for Vector<T> {
+impl<T: traits::LinrustTrait<T>> Add<Vector<T>> for Vector<T> {
     type Output = Vector<T>;
     fn add(self, other: Vector<T>) -> Vector<T> {
         let mut vec: Vec<T> = Vec::new();
@@ -44,7 +45,7 @@ impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Add<Vector<T>> for Vect
 }
 
 // Multiplication Operator Overloads
-impl<T: Clone + Add<T, Output = T> + Mul<T, Output = T>> Mul<Vector<T>> for Vector<T> {
+impl<T: traits::LinrustTrait<T>> Mul<Vector<T>> for Vector<T> {
     type Output = T;
     fn mul(self, other: Vector<T>) -> T {
         //TODO: Fix this init logic
